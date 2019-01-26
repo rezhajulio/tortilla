@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import os
 import time
+import json
 
 import requests
 import six
@@ -220,14 +221,18 @@ class Client(object):
 
         try:
             # parse the response into something nice
+            has_header = len(r.headers.keys()) > 0 and method == 'head'
             has_body = len(r.text) > 0
-            if not has_body:
+            if not has_body and not has_header:
                 # TODO: This is set 'No response' for the debug message.
                 #       Extract this into a different variable so that
                 #       `parsed_response` is not ambiguous.
                 parsed_response = 'No response'
             else:
-                parsed_response = formats.parse(response_format, r.text)
+                if has_header:
+                    parsed_response = formats.parse(response_format, json.dumps(dict(r.headers)))
+                else:
+                    parsed_response = formats.parse(response_format, r.text)
         except ValueError as e:
             # we've failed, raise this stuff when not silent
             if len(r.text) > DEBUG_MAX_TEXT_LENGTH:
@@ -254,7 +259,7 @@ class Client(object):
                   text=parsed_response)
 
         # return our findings and try to make it a bit nicer
-        if has_body:
+        if has_body or has_header:
             return bunchify(parsed_response)
         return None
 
