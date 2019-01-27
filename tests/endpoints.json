@@ -37,7 +37,8 @@
     },
     "/head_endpoint": {
       "method": "HEAD",
-      "body": ""
+      "body": "",
+      "headers": {"message": "Success!"}
     },
     "/status_404": {
       "status": 404,

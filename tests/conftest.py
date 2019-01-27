@@ -56,10 +56,13 @@ def endpoints():
         else:
             body = options.get('body')
 
+        headers = options.get('headers', {})
+
         httpretty.register_uri(method=options.get('method', 'GET'),
                                status=options.get('status', 200),
                                uri=API_URL + endpoint,
-                               body=body)
+                               body=body,
+                               adding_headers=headers)
     yield endpoints
     httpretty.disable()
 

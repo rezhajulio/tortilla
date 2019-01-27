@@ -51,7 +51,7 @@ def test_request_methods(api):
     assert api.post_endpoint.post().message == "Success!"
     assert api.patch_endpoint.patch().message == "Success!"
     assert api.delete_endpoint.delete().message == "Success!"
-    assert api.head_endpoint.head() is None
+    assert api.head_endpoint.head().message == "Success!"
 
 
 def test_extensions(api):
